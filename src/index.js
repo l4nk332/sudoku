@@ -1,7 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const App = () => <h1>Sudoku</h1>
+import './index.css'
+
+import Grid from './Grid/Grid'
+
+const App = () => <Grid />
 
 ReactDOM.render(<App />, document.getElementById('app'))
 
