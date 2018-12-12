@@ -37,3 +37,8 @@
   text-align: center;
   background: var(--background-color);
 }
+
+.focused {
+  background: var(--text-color);
+  color: var(--background-color);
+}
