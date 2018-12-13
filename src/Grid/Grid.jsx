@@ -1,10 +1,11 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useEffect } from 'react'
 
 import { condCat } from '../utils'
 
 import './Grid.css'
 
 const FOCUS_COORDINATE = 'FOCUS_COORDINATE'
+const UPDATE_COORDINATE = 'UPDATE_COORDINATE'
 
 const solvedPuzzle = [
   [2, 3, 1, 4, 5, 9, 6, 7, 8],
@@ -34,13 +35,18 @@ const initialPuzzle = [
 
 const initialState = {
   activeSquare: [0, 0],
-  puzzle: initialPuzzle,
+  puzzle: initialPuzzle
 }
 
 const reducer = (state, { type, payload }) => {
   switch (type) {
     case FOCUS_COORDINATE:
       return {...state, activeSquare: payload}
+    case UPDATE_COORDINATE:
+      const { activeSquare, puzzle } = state
+      const updatedPuzzle = updateSquare(puzzle, activeSquare, payload)
+      console.log(payload, updatedPuzzle)
+      return {...state, puzzle: updatedPuzzle}
     default:
       return state
   }
@@ -50,12 +56,32 @@ const isActive = (x, y, [activeX, activeY]) => (
   x === activeX && y === activeY
 )
 
-const getSquare = (x, y, puzzle) => (
-  puzzle[x][y]
-)
+const getSquare = (x, y, puzzle) => puzzle[x][y]
+
+const updateSquare = (puzzle, [x, y], newValue) => {
+  const updatedRow = puzzle[y].map((value, column) => (
+    column === x ? newValue : value
+  ))
+
+  return [...puzzle.slice(0, y), updatedRow, ...puzzle.slice(y + 1)]
+}
 
 const Grid = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
+  useEffect(() => {
+    function setSquare(event) {
+      const keyValue = Number(event.key)
+      if (keyValue > 0) {
+        dispatch({type: UPDATE_COORDINATE, payload: keyValue})
+      }
+    }
+
+    document.body.addEventListener('keypress', setSquare)
+
+    return () => {
+      document.body.removeEventListener('keypress', setSquare)
+    }
+  })
 
   return (
     <main className='Grid__container'>
