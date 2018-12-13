@@ -1,13 +1,10 @@
 :root {
-  /* colors */
-  --background-color: ghostwhite;
-  --text-color: rgb(25, 25, 25);
-  --grid-color: var(--text-color);
-
-  /* sizes */
   --grid-size: 450px;
   --grid-region-size: calc(var(--grid-size) / 3);
   --grid-cell-size: calc(var(--grid-region-size) / 3);
+
+  --grid-background-color: ghostwhite;
+  --grid-line-color: var(--neutral-tint-3);
 }
 
 #app {
@@ -16,14 +13,15 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: var(--background-color);
+  background: var(--neutral-tint-5);
 }
 
 .Grid__container {
   display: grid;
   grid-template: repeat(3, var(--grid-region-size)) / repeat(3, var(--grid-region-size));
   grid-gap: 2px;
-  background: var(--grid-color);
+  background: var(--grid-line-color);
+  border: 1px solid var(--grid-line-color);
 }
 
 .Grid__region {
@@ -32,13 +30,28 @@
 }
 
 .Grid__cell {
-  border: 1px solid var(--grid-color);
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--grid-line-color);
   font-size: 2rem;
+  font-weight: 300;
   text-align: center;
-  background: var(--background-color);
+  background: var(--grid-background-color);
+  color: var(--neutral-shade-4);
+  cursor: pointer;
+  transition-property: background-color, color;
+  transition-duration: 250ms;
+  transition-timing-function: ease;
 }
 
-.focused {
-  background: var(--text-color);
-  color: var(--background-color);
+.Grid__cell:not(.Grid__cell--focused):hover {
+  background: var(--neutral-tint-3);
+}
+
+.Grid__cell--focused {
+  background: var(--neutral-shade-3);
+  color: var(--neutral-tint-4);
+  cursor: text;
 }
