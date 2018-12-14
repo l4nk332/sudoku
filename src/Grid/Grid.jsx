@@ -1,50 +1,25 @@
 import React, { useReducer, useEffect } from 'react'
 
 import { condCat } from '../utils'
+import { PUZZLES } from '../data/puzzles'
 
 import './Grid.css'
 
 const FOCUS_COORDINATE = 'FOCUS_COORDINATE'
 const UPDATE_COORDINATE = 'UPDATE_COORDINATE'
 
-const solvedPuzzle = [
-  [2, 3, 1, 4, 5, 9, 6, 7, 8],
-  [4, 5, 7, 6, 3, 8, 9, 2, 1],
-  [8, 9, 6, 7, 1, 2, 3, 5, 4],
-  [5, 7, 2, 3, 8, 6, 1, 4, 9],
-  [3, 6, 4, 1, 7, 9, 2, 8, 5],
-  [9, 1, 8, 5, 2, 4, 7, 3, 6],
-  [1, 8, 3, 9, 4, 7, 5, 6, 2],
-  [6, 2, 9, 8, 5, 3, 4, 1, 7],
-  [7, 4, 5, 2, 6, 1, 8, 9, 3]
-]
-
-const _ = null
-
-const initialPuzzle = [
-  [2, _, _, _, _, _, 6, 7, _],
-  [4, 5, _, _, _, _, _, _, 1],
-  [_, 9, _, 7, _, _, _, _, _],
-  [5, 7, 2, 3, 8, 6, 1, 4, 9],
-  [3, 6, 4, 1, 7, 9, 2, 8, 5],
-  [9, 1, 8, 5, 2, 4, 7, 3, 6],
-  [1, 8, 3, 9, 4, 7, 5, 6, 2],
-  [6, 2, 9, 8, 5, 3, 4, 1, 7],
-  [7, 4, 5, 2, 6, 1, 8, 9, 3]
-]
-
 const initialState = {
-  activeSquare: [0, 0],
-  puzzle: initialPuzzle
+  activeCell: [0, 0],
+  puzzle: PUZZLES.LEVEL_1.initial
 }
 
 const reducer = (state, { type, payload }) => {
   switch (type) {
     case FOCUS_COORDINATE:
-      return {...state, activeSquare: payload}
+      return {...state, activeCell: payload}
     case UPDATE_COORDINATE:
-      const { activeSquare, puzzle } = state
-      const updatedPuzzle = updateSquare(puzzle, activeSquare, payload)
+      const { activeCell, puzzle } = state
+      const updatedPuzzle = updateCell(puzzle, activeCell, payload)
       console.log(payload, updatedPuzzle)
       return {...state, puzzle: updatedPuzzle}
     default:
@@ -52,54 +27,54 @@ const reducer = (state, { type, payload }) => {
   }
 }
 
-const isActive = (x, y, [activeX, activeY]) => (
-  x === activeX && y === activeY
+const isActive = (region, cell, [activeRegion, activeCell]) => (
+  region === activeRegion && cell === activeCell
 )
 
-const getSquare = (x, y, puzzle) => puzzle[x][y]
+const getCell = (region, cell, puzzle) => puzzle[region][cell]
 
-const updateSquare = (puzzle, [x, y], newValue) => {
-  const updatedRow = puzzle[y].map((value, column) => (
-    column === x ? newValue : value
+const updateCell = (puzzle, [region, cell], newValue) => {
+  const updatedRegion = puzzle[region].map((value, regionCell) => (
+    regionCell === cell ? newValue : value
   ))
 
-  return [...puzzle.slice(0, y), updatedRow, ...puzzle.slice(y + 1)]
+  return [...puzzle.slice(0, region), updatedRegion, ...puzzle.slice(region + 1)]
 }
 
 const Grid = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
   useEffect(() => {
-    function setSquare(event) {
+    function setCell(event) {
       const keyValue = Number(event.key)
       if (keyValue > 0) {
         dispatch({type: UPDATE_COORDINATE, payload: keyValue})
       }
     }
 
-    document.body.addEventListener('keypress', setSquare)
+    document.body.addEventListener('keypress', setCell)
 
     return () => {
-      document.body.removeEventListener('keypress', setSquare)
+      document.body.removeEventListener('keypress', setCell)
     }
   })
 
   return (
     <main className='Grid__container'>
       {
-        Array(9).fill(0).map((_, y) => (
-          <section className='Grid__region' key={y}>
+        Array(9).fill(0).map((_, region) => (
+          <section className='Grid__region' key={region}>
             {
-              Array(9).fill(0).map((_, x) => (
+              Array(9).fill(0).map((_, cell) => (
                 <span
                   className={condCat(
                     'Grid__cell',
-                    {'Grid__cell--focused': isActive(x, y, state.activeSquare)}
+                    {'Grid__cell--focused': isActive(region, cell, state.activeCell)}
                   )}
                   onClick={() => {
-                    dispatch({type: FOCUS_COORDINATE, payload: [x, y]})
+                    dispatch({type: FOCUS_COORDINATE, payload: [region, cell]})
                   }}
-                  key={x}
-                >{getSquare(x, y, state.puzzle)}</span>
+                  key={cell}
+                >{getCell(region, cell, state.puzzle)}</span>
               ))
             }
           </section>
