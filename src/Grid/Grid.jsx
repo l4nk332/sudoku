@@ -41,20 +41,97 @@ const updateCell = (puzzle, [region, cell], newValue) => {
   return [...puzzle.slice(0, region), updatedRegion, ...puzzle.slice(region + 1)]
 }
 
+const ARROW_MAP = {
+  37: 'left',
+  38: 'up',
+  39: 'right',
+  40: 'down'
+}
+
+const shiftLeft = (activeCell) => {
+  const [region, cell] = activeCell
+  const isEdgeRegion = region % 3 === 0
+  const isEdgeCell = cell % 3 === 0
+
+  if (isEdgeRegion && isEdgeCell) {
+    return [region + 2, cell + 2]
+  } else if (isEdgeCell) {
+    return [region - 1, cell + 2]
+  } else {
+    return [region, cell - 1]
+  }
+}
+
+const shiftUp = (activeCell) => {
+  const [region, cell] = activeCell
+  const isEdgeRegion = region < 3
+  const isEdgeCell = cell < 3
+
+  if (isEdgeRegion && isEdgeCell) {
+    return [region + 6, cell + 6]
+  } else if (isEdgeCell) {
+    return [region - 3, cell + 6]
+  } else {
+    return [region, cell - 3]
+  }
+}
+
+const shiftRight = (activeCell) => {
+  const [region, cell] = activeCell
+  const isEdgeRegion = [2, 5, 8].includes(region)
+  const isEdgeCell = [2, 5, 8].includes(cell)
+
+  if (isEdgeRegion && isEdgeCell) {
+    return [region - 2, cell - 2]
+  } else if (isEdgeCell) {
+    return [region + 1, cell - 2]
+  } else {
+    return [region, cell + 1]
+  }
+}
+
+const shiftDown = (activeCell) => {
+  const [region, cell] = activeCell
+  const isEdgeRegion = region > 5
+  const isEdgeCell = cell > 5
+
+  if (isEdgeRegion && isEdgeCell) {
+    return [region - 6, cell - 6]
+  } else if (isEdgeCell) {
+    return [region + 3, cell - 6]
+  } else {
+    return [region, cell + 3]
+  }
+}
+
+const shiftFocus = (activeCell, direction) => ({
+  left: shiftLeft,
+  up: shiftUp,
+  right: shiftRight,
+  down: shiftDown
+}[direction](activeCell))
+
 const Grid = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
   useEffect(() => {
-    function setCell(event) {
-      const keyValue = Number(event.key)
-      if (keyValue > 0) {
-        dispatch({type: UPDATE_COORDINATE, payload: keyValue})
+    function setCell({key, keyCode}) {
+      const numericKey = Number(key)
+      if (numericKey > 0) {
+        dispatch({type: UPDATE_COORDINATE, payload: numericKey})
+      }
+
+      if (Object.keys(ARROW_MAP).includes(String(keyCode))) {
+        dispatch({
+          type: FOCUS_COORDINATE,
+          payload: shiftFocus(state.activeCell, ARROW_MAP[keyCode])
+        })
       }
     }
 
-    document.body.addEventListener('keypress', setCell)
+    document.body.addEventListener('keydown', setCell)
 
     return () => {
-      document.body.removeEventListener('keypress', setCell)
+      document.body.removeEventListener('keydown', setCell)
     }
   })
 
