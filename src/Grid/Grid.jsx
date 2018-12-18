@@ -20,7 +20,6 @@ const reducer = (state, { type, payload }) => {
     case UPDATE_COORDINATE:
       const { activeCell, puzzle } = state
       const updatedPuzzle = updateCell(puzzle, activeCell, payload)
-      console.log(payload, updatedPuzzle)
       return {...state, puzzle: updatedPuzzle}
     default:
       return state
@@ -45,7 +44,11 @@ const ARROW_MAP = {
   37: 'left',
   38: 'up',
   39: 'right',
-  40: 'down'
+  40: 'down',
+  72: 'left',
+  75: 'up',
+  76: 'right',
+  74: 'down'
 }
 
 const shiftLeft = (activeCell) => {
@@ -125,6 +128,10 @@ const Grid = () => {
           type: FOCUS_COORDINATE,
           payload: shiftFocus(state.activeCell, ARROW_MAP[keyCode])
         })
+      }
+
+      if (['8', '88'].includes(String(keyCode))) {
+        dispatch({type: UPDATE_COORDINATE, payload: null})
       }
     }
 
