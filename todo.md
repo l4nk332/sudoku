@@ -1,7 +1,7 @@
 # TODO
 
 1. ~Convert backdown to grayscale.~
-2. Make initial puzzle squares immutable.
+2. ~Make initial puzzle squares immutable.~
 3. Do not allow initial puzzle squares to be focused by mouse.
 4. Do not allow initial puzzle squares to be focused by keyboard.
 5. Add notes section for a given square.

@@ -10,7 +10,8 @@ const UPDATE_COORDINATE = 'UPDATE_COORDINATE'
 
 const initialState = {
   activeCell: [0, 0],
-  puzzle: PUZZLES.LEVEL_1.initial
+  puzzle: PUZZLES.LEVEL_1.initial,
+  level: 'LEVEL_1'
 }
 
 const reducer = (state, { type, payload }) => {
@@ -118,9 +119,18 @@ const Grid = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
   useEffect(() => {
     function setCell({key, keyCode}) {
+      const {activeCell, level} = state
+      const isImmutableSquare = PUZZLES[level].initial[activeCell[0]][activeCell[1]] !== null
+
       const numericKey = Number(key)
-      if (numericKey > 0) {
-        dispatch({type: UPDATE_COORDINATE, payload: numericKey})
+      if (!isImmutableSquare) {
+        if (numericKey > 0) {
+          dispatch({type: UPDATE_COORDINATE, payload: numericKey})
+        }
+
+        if (['8', '88'].includes(String(keyCode))) {
+          dispatch({type: UPDATE_COORDINATE, payload: null})
+        }
       }
 
       if (Object.keys(ARROW_MAP).includes(String(keyCode))) {
@@ -128,10 +138,6 @@ const Grid = () => {
           type: FOCUS_COORDINATE,
           payload: shiftFocus(state.activeCell, ARROW_MAP[keyCode])
         })
-      }
-
-      if (['8', '88'].includes(String(keyCode))) {
-        dispatch({type: UPDATE_COORDINATE, payload: null})
       }
     }
 
