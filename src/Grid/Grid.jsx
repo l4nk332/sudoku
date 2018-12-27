@@ -8,8 +8,17 @@ import './Grid.css'
 const FOCUS_COORDINATE = 'FOCUS_COORDINATE'
 const UPDATE_COORDINATE = 'UPDATE_COORDINATE'
 
+const findInitialActiveCell = puzzle => {
+  for (let region = 0; region < puzzle.length; region++) {
+    const emptyCell = puzzle[region].findIndex(cell => cell === null)
+    if (emptyCell !== undefined) {
+      return [region, emptyCell]
+    }
+  }
+}
+
 const initialState = {
-  activeCell: [0, 0],
+  activeCell: findInitialActiveCell(PUZZLES.LEVEL_1.initial),
   puzzle: PUZZLES.LEVEL_1.initial,
   level: 'LEVEL_1'
 }
@@ -17,11 +26,21 @@ const initialState = {
 const reducer = (state, { type, payload }) => {
   switch (type) {
     case FOCUS_COORDINATE:
-      return {...state, activeCell: payload}
+      return (
+        isImmutableSquare(PUZZLES[state.level].initial, payload)
+          ? state
+          : {...state, activeCell: payload}
+      )
     case UPDATE_COORDINATE:
       const { activeCell, puzzle } = state
-      const updatedPuzzle = updateCell(puzzle, activeCell, payload)
-      return {...state, puzzle: updatedPuzzle}
+      return (
+        isImmutableSquare(PUZZLES[state.level].initial, activeCell)
+          ? state
+          : {
+            ...state,
+            puzzle: updateCell(puzzle, activeCell, payload)
+          }
+      )
     default:
       return state
   }
@@ -115,22 +134,23 @@ const shiftFocus = (activeCell, direction) => ({
   down: shiftDown
 }[direction](activeCell))
 
+const isImmutableSquare = (initialPuzzle, [region, cell]) => (
+  initialPuzzle[region][cell] !== null
+)
+
 const Grid = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
   useEffect(() => {
     function setCell({key, keyCode}) {
       const {activeCell, level} = state
-      const isImmutableSquare = PUZZLES[level].initial[activeCell[0]][activeCell[1]] !== null
-
       const numericKey = Number(key)
-      if (!isImmutableSquare) {
-        if (numericKey > 0) {
-          dispatch({type: UPDATE_COORDINATE, payload: numericKey})
-        }
 
-        if (['8', '88'].includes(String(keyCode))) {
-          dispatch({type: UPDATE_COORDINATE, payload: null})
-        }
+      if (numericKey > 0) {
+        dispatch({type: UPDATE_COORDINATE, payload: numericKey})
+      }
+
+      if (['8', '88'].includes(String(keyCode))) {
+        dispatch({type: UPDATE_COORDINATE, payload: null})
       }
 
       if (Object.keys(ARROW_MAP).includes(String(keyCode))) {
@@ -148,6 +168,8 @@ const Grid = () => {
     }
   })
 
+  const { activeCell } = state
+
   return (
     <main className='Grid__container'>
       {
@@ -158,7 +180,9 @@ const Grid = () => {
                 <span
                   className={condCat(
                     'Grid__cell',
-                    {'Grid__cell--focused': isActive(region, cell, state.activeCell)}
+                    {'Grid__cell--focused': (
+                      activeCell !== null && isActive(region, cell, activeCell)
+                    )}
                   )}
                   onClick={() => {
                     dispatch({type: FOCUS_COORDINATE, payload: [region, cell]})
