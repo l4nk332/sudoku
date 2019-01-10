@@ -75,68 +75,77 @@ const shiftLeft = (activeCell, validateSquare) => {
   const [region, cell] = activeCell
   const isEdgeRegion = region % 3 === 0
   const isEdgeCell = cell % 3 === 0
-  let nextSquare = []
+  const nextSquare = (
+    isEdgeRegion && isEdgeCell
+      ? [region + 2, cell + 2]
+      : isEdgeCell
+        ? [region - 1, cell + 2]
+        : [region, cell - 1]
+  )
 
-  if (isEdgeRegion && isEdgeCell) {
-    nextSquare = [region + 2, cell + 2]
-  } else if (isEdgeCell) {
-    nextSquare = [region - 1, cell + 2]
-  } else {
-    nextSquare = [region, cell - 1]
-  }
-
-  return validateSquare(nextSquare) ? nextSquare : shiftLeft(nextSquare, validateSquare)
+  return (
+    validateSquare(nextSquare)
+      ? nextSquare
+      : shiftLeft(nextSquare, validateSquare)
+  )
 }
 
 const shiftUp = (activeCell, validateSquare) => {
   const [region, cell] = activeCell
   const isEdgeRegion = region < 3
   const isEdgeCell = cell < 3
-  let nextSquare = []
+  const nextSquare = (
+    isEdgeRegion && isEdgeCell
+      ? [region + 6, cell + 6]
+      : isEdgeCell
+        ? [region - 3, cell + 6]
+        : [region, cell - 3]
+  )
 
-  if (isEdgeRegion && isEdgeCell) {
-    nextSquare = [region + 6, cell + 6]
-  } else if (isEdgeCell) {
-    nextSquare = [region - 3, cell + 6]
-  } else {
-    nextSquare = [region, cell - 3]
-  }
 
-  return validateSquare(nextSquare) ? nextSquare : shiftUp(nextSquare, validateSquare)
+  return (
+    validateSquare(nextSquare)
+      ? nextSquare
+      : shiftUp(nextSquare, validateSquare)
+  )
 }
 
 const shiftRight = (activeCell, validateSquare) => {
   const [region, cell] = activeCell
   const isEdgeRegion = [2, 5, 8].includes(region)
   const isEdgeCell = [2, 5, 8].includes(cell)
-  let nextSquare = []
+  const nextSquare = (
+    isEdgeRegion && isEdgeCell
+      ? [region - 2, cell - 2]
+      : isEdgeCell
+        ? [region + 1, cell - 2]
+        : [region, cell + 1]
+  )
 
-  if (isEdgeRegion && isEdgeCell) {
-    nextSquare = [region - 2, cell - 2]
-  } else if (isEdgeCell) {
-    nextSquare = [region + 1, cell - 2]
-  } else {
-    nextSquare = [region, cell + 1]
-  }
-
-  return validateSquare(nextSquare) ? nextSquare : shiftRight(nextSquare, validateSquare)
+  return (
+    validateSquare(nextSquare)
+      ? nextSquare
+      : shiftRight(nextSquare, validateSquare)
+  )
 }
 
 const shiftDown = (activeCell, validateSquare) => {
   const [region, cell] = activeCell
   const isEdgeRegion = region > 5
   const isEdgeCell = cell > 5
-  let nextSquare = []
+  const nextSquare = (
+    isEdgeRegion && isEdgeCell
+      ? [region - 6, cell - 6]
+      : isEdgeCell
+        ? [region + 3, cell - 6]
+        : [region, cell + 3]
+  )
 
-  if (isEdgeRegion && isEdgeCell) {
-    nextSquare = [region - 6, cell - 6]
-  } else if (isEdgeCell) {
-    nextSquare = [region + 3, cell - 6]
-  } else {
-    nextSquare = [region, cell + 3]
-  }
-
-  return validateSquare(nextSquare) ? nextSquare : shiftDown(nextSquare, validateSquare)
+  return (
+    validateSquare(nextSquare)
+      ? nextSquare
+      : shiftDown(nextSquare, validateSquare)
+  )
 }
 
 const shiftFocus = (validateSquare, activeCell, direction) => ({
