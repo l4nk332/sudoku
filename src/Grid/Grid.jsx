@@ -71,68 +71,80 @@ const ARROW_MAP = {
   74: 'down'
 }
 
-const shiftLeft = (activeCell) => {
+const shiftLeft = (activeCell, validateSquare) => {
   const [region, cell] = activeCell
   const isEdgeRegion = region % 3 === 0
   const isEdgeCell = cell % 3 === 0
+  let nextSquare = []
 
   if (isEdgeRegion && isEdgeCell) {
-    return [region + 2, cell + 2]
+    nextSquare = [region + 2, cell + 2]
   } else if (isEdgeCell) {
-    return [region - 1, cell + 2]
+    nextSquare = [region - 1, cell + 2]
   } else {
-    return [region, cell - 1]
+    nextSquare = [region, cell - 1]
   }
+
+  return validateSquare(nextSquare) ? nextSquare : shiftLeft(nextSquare, validateSquare)
 }
 
-const shiftUp = (activeCell) => {
+const shiftUp = (activeCell, validateSquare) => {
   const [region, cell] = activeCell
   const isEdgeRegion = region < 3
   const isEdgeCell = cell < 3
+  let nextSquare = []
 
   if (isEdgeRegion && isEdgeCell) {
-    return [region + 6, cell + 6]
+    nextSquare = [region + 6, cell + 6]
   } else if (isEdgeCell) {
-    return [region - 3, cell + 6]
+    nextSquare = [region - 3, cell + 6]
   } else {
-    return [region, cell - 3]
+    nextSquare = [region, cell - 3]
   }
+
+  return validateSquare(nextSquare) ? nextSquare : shiftUp(nextSquare, validateSquare)
 }
 
-const shiftRight = (activeCell) => {
+const shiftRight = (activeCell, validateSquare) => {
   const [region, cell] = activeCell
   const isEdgeRegion = [2, 5, 8].includes(region)
   const isEdgeCell = [2, 5, 8].includes(cell)
+  let nextSquare = []
 
   if (isEdgeRegion && isEdgeCell) {
-    return [region - 2, cell - 2]
+    nextSquare = [region - 2, cell - 2]
   } else if (isEdgeCell) {
-    return [region + 1, cell - 2]
+    nextSquare = [region + 1, cell - 2]
   } else {
-    return [region, cell + 1]
+    nextSquare = [region, cell + 1]
   }
+
+  return validateSquare(nextSquare) ? nextSquare : shiftRight(nextSquare, validateSquare)
 }
 
-const shiftDown = (activeCell) => {
+const shiftDown = (activeCell, validateSquare) => {
   const [region, cell] = activeCell
   const isEdgeRegion = region > 5
   const isEdgeCell = cell > 5
+  let nextSquare = []
 
   if (isEdgeRegion && isEdgeCell) {
-    return [region - 6, cell - 6]
+    nextSquare = [region - 6, cell - 6]
   } else if (isEdgeCell) {
-    return [region + 3, cell - 6]
+    nextSquare = [region + 3, cell - 6]
   } else {
-    return [region, cell + 3]
+    nextSquare = [region, cell + 3]
   }
+
+  return validateSquare(nextSquare) ? nextSquare : shiftDown(nextSquare, validateSquare)
 }
 
-const shiftFocus = (activeCell, direction) => ({
+const shiftFocus = (validateSquare, activeCell, direction) => ({
   left: shiftLeft,
   up: shiftUp,
   right: shiftRight,
   down: shiftDown
-}[direction](activeCell))
+}[direction](activeCell, validateSquare))
 
 const isImmutableSquare = (initialPuzzle, [region, cell]) => (
   initialPuzzle[region][cell] !== null
@@ -156,7 +168,11 @@ const Grid = () => {
       if (Object.keys(ARROW_MAP).includes(String(keyCode))) {
         dispatch({
           type: FOCUS_COORDINATE,
-          payload: shiftFocus(state.activeCell, ARROW_MAP[keyCode])
+          payload: shiftFocus(
+            (square) => !isImmutableSquare(PUZZLES[state.level].initial, square),
+            state.activeCell,
+            ARROW_MAP[keyCode]
+          )
         })
       }
     }
