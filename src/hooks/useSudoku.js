@@ -1,10 +1,12 @@
-import React, { useReducer, useEffect } from 'react'
+import { useReducer, useEffect } from 'react'
 
 import { isImmutableSquare, shiftFocus, updateCell, findInitialActiveCell } from '../utils'
 import { ARROW_MAP, DELETE_KEYS, FOCUS_COORDINATE, UPDATE_COORDINATE, LEVEL_1 } from '../constants'
 import { PUZZLES } from '../data/puzzles'
 
 const reducer = (state, { type, payload }) => {
+  const { activeCell, puzzle } = state
+
   switch (type) {
     case FOCUS_COORDINATE:
       return (
@@ -13,7 +15,6 @@ const reducer = (state, { type, payload }) => {
           : {...state, activeCell: payload}
       )
     case UPDATE_COORDINATE:
-      const { activeCell, puzzle } = state
       return (
         isImmutableSquare(PUZZLES[state.level].initial, activeCell)
           ? state
@@ -51,8 +52,8 @@ const useSudoku = () => {
         dispatch({
           type: FOCUS_COORDINATE,
           payload: shiftFocus(
-            (square) => !isImmutableSquare(PUZZLES[state.level].initial, square),
-            state.activeCell,
+            (square) => !isImmutableSquare(PUZZLES[level].initial, square),
+            activeCell,
             ARROW_MAP[keyCode]
           )
         })
