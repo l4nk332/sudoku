@@ -1,27 +1,3 @@
-:root {
-  --grid-size: 450px;
-  --grid-region-size: calc(var(--grid-size) / 3);
-  --grid-cell-size: calc(var(--grid-region-size) / 3);
-
-  --app-background-color: white;
-  --grid-background-color: white;
-  --grid-line-color: rgb(200, 200, 200);
-  --grid-cell-color: black;
-  --grid-cell-color__focused: white;
-  --grid-cell-background-color__focused: black;
-  --grid-cell-background-color__hover: rgb(230, 230, 230);
-  --grid-cell-color__immutable: #898989;
-}
-
-#app {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background: var(--app-background-color);
-}
-
 .Grid__container {
   display: grid;
   grid-template: repeat(3, var(--grid-region-size)) / repeat(3, var(--grid-region-size));

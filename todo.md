@@ -8,3 +8,4 @@
 - Add auto-save local storage capability.
 - Add ability to toggle on guides which will help focus the area, row, and column.
 - Add button to reset the board.
+- Add setting to show all instances of highlighted number.

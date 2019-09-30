@@ -2,9 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import './index.css'
-import './styles/_colors.css'
 
-import Grid from './Grid/Grid'
+import { Grid } from './components'
 
 const App = () => <Grid />
 
