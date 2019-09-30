@@ -10,6 +10,7 @@
   --grid-cell-color__focused: white;
   --grid-cell-background-color__focused: black;
   --grid-cell-background-color__hover: rgb(230, 230, 230);
+  --grid-cell-color__immutable: #898989;
 }
 
 #app {
@@ -59,4 +60,9 @@
   background: var(--grid-cell-background-color__focused);
   color: var(--grid-cell-color__focused);
   cursor: text;
+}
+
+.Grid__cell--immutable {
+  color: var(--grid-cell-color__immutable);
+  cursor: not-allowed;
 }

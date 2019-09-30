@@ -193,7 +193,7 @@ const Grid = () => {
     }
   })
 
-  const { activeCell } = state
+  const { activeCell, level } = state
 
   return (
     <main className='Grid__container'>
@@ -205,9 +205,14 @@ const Grid = () => {
                 <span
                   className={condCat(
                     'Grid__cell',
-                    {'Grid__cell--focused': (
-                      activeCell !== null && isActive(region, cell, activeCell)
-                    )}
+                    {
+                      'Grid__cell--focused': (
+                        activeCell !== null && isActive(region, cell, activeCell)
+                      ),
+                      'Grid__cell--immutable': (
+                        isImmutableSquare(PUZZLES[level].initial, [region, cell])
+                      )
+                    }
                   )}
                   onClick={() => {
                     dispatch({type: FOCUS_COORDINATE, payload: [region, cell]})
