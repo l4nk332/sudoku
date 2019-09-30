@@ -2,7 +2,7 @@ import React from "react";
 
 import useSudoku from "../../hooks/useSudoku";
 import { condCat, isImmutableSquare, getCell, isActive } from "../../utils";
-import { FOCUS_COORDINATE, UPDATE_COORDINATE, LEVEL_1 } from "../../constants";
+import { FOCUS_COORDINATE } from "../../constants";
 import { PUZZLES } from "../../data/puzzles";
 
 import "./Grid.css";

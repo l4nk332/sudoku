@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --mode development",
-    "lint": "./node_modules/eslint/bin/eslint.js ."
+    "lint": "eslint --ext .jsx --ext .js ."
   },
   "keywords": [
     "sudoku"
@@ -20,9 +20,9 @@
     "@babel/core": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.4",
     "css-loader": "^1.0.1",
-    "eslint": "^6.5.0",
     "eslint-plugin-react": "^7.14.3",
     "react-hot-loader": "^4.3.12",
     "style-loader": "^0.23.1",
