@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom'
 
 import './index.css'
 
-import { Grid } from './components'
+import { Sudoku } from './containers'
 
-const App = () => <Grid />
+const App = () => <Sudoku />
 
 ReactDOM.render(<App />, document.getElementById('app'))
 

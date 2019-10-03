@@ -11,7 +11,4 @@ export const ARROW_MAP = {
 
 export const DELETE_KEYS = ['8', '88']
 
-export const FOCUS_COORDINATE = 'FOCUS_COORDINATE'
-export const UPDATE_COORDINATE = 'UPDATE_COORDINATE'
-
 export const LEVEL_1 = 'LEVEL_1'
