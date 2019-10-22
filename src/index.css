@@ -124,6 +124,36 @@ ol, ul {
   --grid-cell-color__immutable: #898989;
 }
 
+@media (max-width: 480px) {
+  :root {
+    --grid-size: 400px;
+  }
+}
+
+@media (max-width: 435px) {
+  :root {
+    --grid-size: 380px;
+  }
+}
+
+@media (max-width: 415px) {
+  :root {
+    --grid-size: 356px;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --grid-size: 325px;
+  }
+}
+
+@media (max-width: 340px) {
+  :root {
+    --grid-size: 300px;
+  }
+}
+
 #app {
   display: flex;
   flex-flow: column nowrap;
